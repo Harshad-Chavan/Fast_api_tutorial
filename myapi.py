@@ -5,17 +5,18 @@ from pydantic import BaseModel
 app = FastAPI()
 
 students = {
-    1: {"name": "jhon",
-        "class": "12",
+    1: {
+        "name": "jhon",
+        "grade": "12",
         "age": 17
         }
 }
 
 
-class Employee(BaseModel):
+class Student(BaseModel):
     name: str
-    e_id: int
-    department: str | None = None
+    grade: str | None = None
+    age: int
 
 
 # command to run server
@@ -42,7 +43,13 @@ def get_student_by_name(name: str | None = None):
     else:
         return {"Data": "not found"}
 
-# created a post request endpoint
-@app.post("/employee")
-def add_employee(employee: Employee):
-    return employee
+# created a post request endpoint to add sudent object
+@app.post("/add_student")
+def add_employee(student: Student):
+    try:
+        new_id = max(students.keys()) + 1
+        students[new_id] = dict(student)
+        return students
+    except Exception as e:
+        return str(e)
+
