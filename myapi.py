@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Path
-from typing import Optional
+from pydantic import BaseModel
 
 # Need to creata the object first
 app = FastAPI()
@@ -10,6 +10,12 @@ students = {
         "age": 17
         }
 }
+
+
+class Employee(BaseModel):
+    name: str
+    e_id: int
+    department: str | None = None
 
 
 # command to run server
@@ -26,7 +32,8 @@ def index():
 def get_student(student_id: int = Path(None, description="id of the student to be viewed")):
     return students[student_id]
 
-# query parameters with default and non default arguments
+
+# query parameters with default and non default argume
 @app.get("/get_student_by_name")
 def get_student_by_name(name: str | None = None):
     for key, value in students.items():
@@ -34,3 +41,8 @@ def get_student_by_name(name: str | None = None):
             return students[key]
     else:
         return {"Data": "not found"}
+
+# created a post request endpoint
+@app.post("/employee")
+def add_employee(employee: Employee):
+    return employee
