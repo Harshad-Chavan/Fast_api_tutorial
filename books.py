@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 
 app = FastAPI()
 
@@ -30,23 +30,34 @@ async def read_book(book_title: str):
         if book.get("title").casefold() == book_title.casefold():
             return book
 
+
 # think of query parameter to filter data
 # want to filter books based on category
 @app.get("/books/")
-async def read_category_by_query(category : str):
+async def read_category_by_query(category: str):
     books_to_return = []
     for book in BOOKS:
-        if book.get('category').casefold() == category.casefold():
+        if book.get("category").casefold() == category.casefold():
             books_to_return.append(book)
     return books_to_return
 
+
 @app.get("/books/{book_author}/")
-async def read_author_category_by_query(book_author : str, category : str):
+async def read_author_category_by_query(book_author: str, category: str):
     try:
         books_to_return = []
         for book in BOOKS:
-            if book.get('author').casefold() == book_author.casefold() and book.get('category').casefold() == category.casefold():
+            if (
+                book.get("author").casefold() == book_author.casefold()
+                and book.get("category").casefold() == category.casefold()
+            ):
                 books_to_return.append(book)
         return books_to_return
     except Exception as e:
         return {"Exception": e}
+
+# post is used to create data
+# need to import body to send additional data in the req
+@app.post("/books/create_book/")
+async def create_book(new_book=Body()):
+    BOOKS.append(new_book)
