@@ -70,3 +70,11 @@ async def update_book(updated_book=Body()):
     for i in range(len(BOOKS)):
         if BOOKS[i].get("title").lower() == updated_book.get("title").lower():
             BOOKS[i] = updated_book
+
+# delete uses path parameter
+@app.delete("/books/delete_book/{book_title}")
+async def delete_book(book_title : str):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get("title").lower() == book_title.lower():
+            BOOKS.pop(i)
+            break
