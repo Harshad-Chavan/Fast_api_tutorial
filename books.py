@@ -56,8 +56,17 @@ async def read_author_category_by_query(book_author: str, category: str):
     except Exception as e:
         return {"Exception": e}
 
+
 # post is used to create data
 # need to import body to send additional data in the req
 @app.post("/books/create_book/")
 async def create_book(new_book=Body()):
     BOOKS.append(new_book)
+
+
+# put is for updating data
+@app.put("/books/update_book")
+async def update_book(updated_book=Body()):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get("title").lower() == updated_book.get("title").lower():
+            BOOKS[i] = updated_book
