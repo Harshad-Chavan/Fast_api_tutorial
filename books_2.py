@@ -1,8 +1,9 @@
-from fastapi import FastAPI,Body
-from pydantic import BaseModel,Field
+from typing import Optional
+
+from fastapi import FastAPI
+from pydantic import BaseModel, Field
 
 app = FastAPI()
-
 
 
 class Book:
@@ -19,12 +20,15 @@ class Book:
         self.description = description
         self.rating = rating
 
+# this is a pydantic object
+# use Field to add validation
 class BookRequest(BaseModel):
-    id: int
-    title: str
-    author: str
-    description: str
-    rating: int
+    # make the id optional
+    id: Optional[int]
+    title: str = Field(min_length=3)
+    author: str = Field(min_length=1)
+    description: str = Field(min_length=1, max_length=100)
+    rating: int = Field(gt=-1, lt=6)
 
 
 BOOKS = [
@@ -41,7 +45,23 @@ BOOKS = [
 async def read_all_books():
     return BOOKS
 
+
+# pydantic is used for data modelling,data parsing and efficient error handling
+# we are ensuring the the post req is having approprite data before transforming into book object
 @app.post("/create_book")
-async def create_book(book_request : BookRequest):
+async def create_book(book_request: BookRequest):
     new_book = Book(**book_request.dict())
-    BOOKS.append(new_book)
+    BOOKS.append(find_book_id(new_book))
+
+# creating this function to get the max id in the list and assign it to the book
+def find_book_id(book : Book):
+    #another way
+    book.id = 1 if len(BOOKS) == 0 else BOOKS[-1].id + 1
+
+    # way 2
+    # if len(BOOKS):
+    #     book.id = BOOKS[-1].id + 1
+    # else:
+    #     book.id = 1
+
+    return book
