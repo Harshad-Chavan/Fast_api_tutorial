@@ -20,15 +20,28 @@ class Book:
         self.description = description
         self.rating = rating
 
+
 # this is a pydantic object
 # use Field to add validation
 class BookRequest(BaseModel):
     # make the id optional
-    id: Optional[int]
+    id: Optional[int] = Field(title='id is not needed')
     title: str = Field(min_length=3)
     author: str = Field(min_length=1)
     description: str = Field(min_length=1, max_length=100)
     rating: int = Field(gt=-1, lt=6)
+
+    # this isa pydantic class
+    # editing the example value
+    class Config:
+        schema_extra  = {
+            'example' : {
+                'title' : "A new book",
+                'auhtor' : 'codewithroby',
+                'description' : 'A new book description',
+                'rating' : 5
+            }
+        }
 
 
 BOOKS = [
@@ -53,9 +66,10 @@ async def create_book(book_request: BookRequest):
     new_book = Book(**book_request.dict())
     BOOKS.append(find_book_id(new_book))
 
+
 # creating this function to get the max id in the list and assign it to the book
-def find_book_id(book : Book):
-    #another way
+def find_book_id(book: Book):
+    # another way
     book.id = 1 if len(BOOKS) == 0 else BOOKS[-1].id + 1
 
     # way 2
