@@ -34,12 +34,12 @@ class BookRequest(BaseModel):
     # this isa pydantic class
     # editing the example value
     class Config:
-        schema_extra  = {
-            'example' : {
-                'title' : "A new book",
-                'auhtor' : 'codewithroby',
-                'description' : 'A new book description',
-                'rating' : 5
+        schema_extra = {
+            "example": {
+                "title": "A new book",
+                "author": "codewithroby",
+                "description": "A new book description",
+                "rating": 5,
             }
         }
 
