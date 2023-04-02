@@ -83,8 +83,9 @@ async def delete_book(book_title: str):
 
 """ Create a new API Endpoint that can fetch all books from a specific author using either Path Parameters or Query Parameters."""
 
+
 @app.get("/books/byauthor/{author_name}")
-async def get_all_books_from_author(author_name :str):
+async def get_all_books_from_author(author_name: str):
     Books_from_author = []
     for book in BOOKS:
         if book.get("author").lower() == author_name.lower():
@@ -92,4 +93,4 @@ async def get_all_books_from_author(author_name :str):
     if Books_from_author:
         return Books_from_author
     else:
-        return {"msg" : f"No books found for author:{author_name}"}
+        return {"msg": f"No books found for author:{author_name}"}
