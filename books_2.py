@@ -25,7 +25,7 @@ class Book:
 # use Field to add validation
 class BookRequest(BaseModel):
     # make the id optional
-    id: Optional[int] = Field(title='id is not needed')
+    id: Optional[int] = Field(title="id is not needed")
     title: str = Field(min_length=3)
     author: str = Field(min_length=1)
     description: str = Field(min_length=1, max_length=100)
