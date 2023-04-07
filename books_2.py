@@ -58,6 +58,12 @@ BOOKS = [
 async def read_all_books():
     return BOOKS
 
+@app.get("/books/{book_id}")
+async def get_book_by_id(book_id : int):
+    for book in BOOKS:
+        if book.id == book_id:
+            return book
+
 
 # pydantic is used for data modelling,data parsing and efficient error handling
 # we are ensuring the the post req is having approprite data before transforming into book object
