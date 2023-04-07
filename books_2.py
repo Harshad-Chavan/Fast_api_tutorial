@@ -2,7 +2,7 @@ from typing import Optional
 
 # use path to add vlidation to path paramets
 # use Query to add vlidation to Query paramets
-from fastapi import FastAPI,Path,Query
+from fastapi import FastAPI, Path, Query, HTTPException
 from pydantic import BaseModel, Field
 
 app = FastAPI()
@@ -64,16 +64,19 @@ BOOKS = [
 async def read_all_books():
     return BOOKS
 
+
 # adding extrra validation using Path
 @app.get("/books/{book_id}")
 async def get_book_by_id(book_id: int = Path(gt=0)):
     for book in BOOKS:
         if book.id == book_id:
             return book
+    raise HTTPException(status_code=404, detail="item not found")
+
 
 
 @app.get("/books/publish/")
-async def get_book_by_publish_date(published_date: int = Query(gt=1999,lt=2031)):
+async def get_book_by_publish_date(published_date: int = Query(gt=1999, lt=2031)):
     books_returned = []
     for book in BOOKS:
         if book.published_date == published_date:
@@ -82,7 +85,7 @@ async def get_book_by_publish_date(published_date: int = Query(gt=1999,lt=2031))
 
 
 @app.get("/books/")
-async def get_book_by_rating(book_rating: int = Query(gt=0,lt=6)):
+async def get_book_by_rating(book_rating: int = Query(gt=0, lt=6)):
     books_returned = []
     for book in BOOKS:
         if book.rating == book_rating:
@@ -100,17 +103,26 @@ async def create_book(book_request: BookRequest):
 
 @app.put("/books/update_book")
 async def update_book(book_request: BookRequest):
+    book_changed = False
     for i in range(len(BOOKS)):
         if BOOKS[i].id == book_request.id:
             BOOKS[i] = Book(**book_request.dict())
+            book_changed = True
+    if not book_changed:
+        raise HTTPException(status_code=404 , detail="item not found")
+
 
 
 @app.delete("/books/{book_id}")
 async def delete_book(book_id: int = Path(gt=0)):
+    book_changed = False
     for i in range(len(BOOKS)):
         if BOOKS[i].id == book_id:
             BOOKS.pop(i)
+            book_changed = True
             break
+    if not book_changed:
+        raise HTTPException(status_code=404 , detail="item not found")
 
 
 # creating this function to get the max id in the list and assign it to the book
