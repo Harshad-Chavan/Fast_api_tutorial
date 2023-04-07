@@ -12,13 +12,15 @@ class Book:
     author: str
     description: str
     rating: int
+    published_date: int
 
-    def __init__(self, id, title, author, description, rating):
+    def __init__(self, id, title, author, description, rating,published_date):
         self.id = id
         self.title = title
         self.author = author
         self.description = description
         self.rating = rating
+        self.published_date = published_date
 
 
 # this is a pydantic object
@@ -30,6 +32,7 @@ class BookRequest(BaseModel):
     author: str = Field(min_length=1)
     description: str = Field(min_length=1, max_length=100)
     rating: int = Field(gt=-1, lt=6)
+    published_date : int = Field(gt=1999,lt=2031)
 
     # this isa pydantic class
     # editing the example value
@@ -40,17 +43,18 @@ class BookRequest(BaseModel):
                 "author": "codewithroby",
                 "description": "A new book description",
                 "rating": 5,
+                "published_date" : 2029
             }
         }
 
 
 BOOKS = [
-    Book(1, "Computer Science Pro", "codingwithroby", "A very nice book", 5),
-    Book(2, "Be Fast with Fast api", "codingwithroby", "This is a greate book", 5),
-    Book(3, "Master Endpoint", "codingwithroby", "awesome  book", 5),
-    Book(4, "HP1", "Author one", " book", 2),
-    Book(5, "HP2", "Author Two", "book", 3),
-    Book(6, "HP1", "Author one", " book", 1),
+    Book(1, "Computer Science Pro", "codingwithroby", "A very nice book", 5,2012),
+    Book(2, "Be Fast with Fast api", "codingwithroby", "This is a greate book", 5,2015),
+    Book(3, "Master Endpoint", "codingwithroby", "awesome  book", 5,2000),
+    Book(4, "HP1", "Author one", " book", 2,2002),
+    Book(5, "HP2", "Author Two", "book", 3,2004),
+    Book(6, "HP1", "Author one", " book", 1,2015),
 ]
 
 
@@ -58,20 +62,50 @@ BOOKS = [
 async def read_all_books():
     return BOOKS
 
+
 @app.get("/books/{book_id}")
-async def get_book_by_id(book_id : int):
+async def get_book_by_id(book_id: int):
     for book in BOOKS:
         if book.id == book_id:
             return book
 
+@app.get("/books/publish/")
+async def get_book_by_publish_date(published_date: int):
+    books_returned = []
+    for book in BOOKS:
+        if book.published_date == published_date:
+            books_returned.append(book)
+    return books_returned
+
+@app.get("/books/")
+async def get_book_by_rating(book_rating : int):
+    books_returned = []
+    for book in BOOKS:
+        if book.rating == book_rating:
+            books_returned.append(book)
+    return books_returned
+
 
 # pydantic is used for data modelling,data parsing and efficient error handling
 # we are ensuring the the post req is having approprite data before transforming into book object
-@app.post("/create_book")
+@app.post("/books/create_book")
 async def create_book(book_request: BookRequest):
     new_book = Book(**book_request.dict())
     BOOKS.append(find_book_id(new_book))
 
+@app.put("/books/update_book")
+async def update_book(book_request: BookRequest):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].id == book_request.id:
+            BOOKS[i] = Book(**book_request.dict())
+
+
+@app.delete("/books/{book_id}")
+async def delete_book(book_id: int):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].id == book_id:
+            BOOKS.pop(i)
+            break
 
 # creating this function to get the max id in the list and assign it to the book
 def find_book_id(book: Book):
