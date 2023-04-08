@@ -5,12 +5,13 @@ import models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from starlette import status
+from pydantic import BaseModel, Field
+from typing import Optional
 
 app = FastAPI()
 
 # the line creates the .db sqlite file which contains database
 models.Base.metadata.create_all(bind=engine)
-
 
 def get_db():
     try:
@@ -21,6 +22,14 @@ def get_db():
 
 def http_exception_404():
     return HTTPException(status_code=404, detail="Item not found")
+
+
+class Todo(BaseModel):
+    title : str
+    description : Optional[str]
+    priority : int = Field(gt=0,lt=6,description="Priority must be between 1 & 5")
+    complete : bool
+
 
 @app.get("/")
 # this will get executed after the get_db function
@@ -35,3 +44,10 @@ async def read_todo(todo_id: int, db: Session = Depends(get_db)):
     if todo_model is not None:
         return todo_model
     raise http_exception_404()
+
+@app.post("/todos/create_todo")
+async def create_todo(todo:Todo,db: Session = Depends(get_db)):
+    todo_model = models.Todos(**todo.dict())
+    db.add(todo_model)
+    db.commit()
+    return {'status_code':201,"transaciton" : "Succesful"}
