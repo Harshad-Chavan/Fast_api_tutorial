@@ -61,10 +61,20 @@ async def update_todo(todo_id: int,todo: Todo, db: Session = Depends(get_db)):
     db.add(todo_model)
     db.commit()
 
+@app.delete("/todos/{todo_id}",status_code=status.HTTP_200_OK)
+async def delete_todo(todo_id: int, db: Session = Depends(get_db)):
+        todo_model = db.query(models.Todos).filter(models.Todos.id == todo_id).first()
+        if todo_model is None:
+            raise http_exception_404()
+
+        db.query(models.Todos).filter(models.Todos.id == todo_id).delete()
+        db.commit()
+
 
 @app.post("/todos/create_todo",status_code=status.HTTP_201_CREATED)
 async def create_todo(todo: Todo, db: Session = Depends(get_db)):
     todo_model = models.Todos(**todo.dict())
     db.add(todo_model)
     db.commit()
+
 
