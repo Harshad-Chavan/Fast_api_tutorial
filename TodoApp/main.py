@@ -7,11 +7,15 @@ from sqlalchemy.orm import Session
 from starlette import status
 from pydantic import BaseModel, Field
 from typing import Optional
+from routers import auth
 
 app = FastAPI()
 
 # the line creates the .db sqlite file which contains database
 models.Base.metadata.create_all(bind=engine)
+
+# this tell adds the apis in different files
+app.include_router(auth.router)
 
 
 def get_db():
