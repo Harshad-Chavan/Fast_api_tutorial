@@ -1,5 +1,9 @@
-from fastapi import APIRouter
+from typing import Annotated
+from database import SessionLocal
+from starlette import status
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
+from sqlalchemy.orm import Session
 from models import User
 from passlib.context import CryptContext
 
@@ -18,8 +22,16 @@ class CreateUserRequest(BaseModel):
     role: str
 
 
-@router.post("/auth")
-async def create_user(create_user_request: CreateUserRequest):
+def get_db():
+    try:
+        db = SessionLocal()
+        yield db
+    finally:
+        db.close
+
+
+@router.post("/auth", status_code=status.HTTP_201_CREATED)
+async def create_user(create_user_request: CreateUserRequest, db: Session = Depends(get_db)):
 
     create_user_model = User(
         username=create_user_request.username,
@@ -30,5 +42,7 @@ async def create_user(create_user_request: CreateUserRequest):
         role=create_user_request.role,
         active=True,
     )
+    db.add(create_user_model)
+    db.commit()
 
     return create_user_model
