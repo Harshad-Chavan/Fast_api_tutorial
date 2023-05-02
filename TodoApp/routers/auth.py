@@ -1,11 +1,13 @@
 from typing import Annotated
-from database import SessionLocal
-from starlette import status
-from fastapi import APIRouter, Depends
-from pydantic import BaseModel, Field
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from starlette import status
+from database import SessionLocal
 from models import User
 from passlib.context import CryptContext
+from fastapi.security import OAuth2PasswordRequestForm
+
 
 # this tell that this file is not an application
 # we will add these routes in the main file from where they can be reachable
@@ -23,16 +25,18 @@ class CreateUserRequest(BaseModel):
 
 
 def get_db():
+    db = SessionLocal()
     try:
-        db = SessionLocal()
         yield db
     finally:
-        db.close
+        db.close()
+
+
+db_dependency = Annotated[Session, Depends(get_db)]
 
 
 @router.post("/auth", status_code=status.HTTP_201_CREATED)
-async def create_user(create_user_request: CreateUserRequest, db: Session = Depends(get_db)):
-
+async def create_user(create_user_request: CreateUserRequest, db=db_dependency):
     create_user_model = User(
         username=create_user_request.username,
         email=create_user_request.email,
@@ -46,3 +50,9 @@ async def create_user(create_user_request: CreateUserRequest, db: Session = Depe
     db.commit()
 
     return create_user_model
+
+
+# to authenticate the user we will be using JWT
+@router.post("/token")
+async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+    return "token"
