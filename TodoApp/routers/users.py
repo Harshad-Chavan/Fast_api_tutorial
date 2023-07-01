@@ -21,7 +21,8 @@ def get_db():
 
 
 class ChangePassword(BaseModel):
-    password: str
+    old_password: str
+    new_password: Field(min_length=6)
 
 
 user_dependency = Annotated[dict, Depends(get_current_user)]
@@ -37,10 +38,15 @@ async def get_user_info(user: user_dependency, db: db_dependency):
 
 
 @router.put("/change_password", status_code=status.HTTP_204_NO_CONTENT)
-async def change_password(user: user_dependency, db: db_dependency, new_password: ChangePassword):
+async def change_password(user: user_dependency, db: db_dependency, passwords: ChangePassword):
     if user is None:
         raise HTTPException(status_code=401, detail="Authentication failed")
     user = db.query(models.User).filter(models.User.id == user.get("user_id")).first()
-    user.hashed_password = bcrypt_context.hash(new_password.password)
+
+    # to check if the old password matches
+    if not bcrypt_context.verify(passwords.old_password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="OLd password did not match")
+
+    user.hashed_password = bcrypt_context.hash(passwords.new_password)
     db.add(user)
     db.commit()
