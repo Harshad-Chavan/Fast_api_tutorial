@@ -22,7 +22,7 @@ def get_db():
 
 class ChangePassword(BaseModel):
     old_password: str
-    new_password: Field(min_length=6)
+    new_password: str = Field(min_length=6)
 
 
 user_dependency = Annotated[dict, Depends(get_current_user)]
