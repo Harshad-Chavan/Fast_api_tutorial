@@ -32,6 +32,7 @@ class Address(BaseModel):
     state: str
     country: str
     postalcode: str
+    apt_num: int
 
 user_dependency = Annotated[dict,Depends(get_current_user)]
 db_dependecy = Annotated[Session,Depends(get_db)]
@@ -47,6 +48,7 @@ async def create_address(user:user_dependency,address_request:Address,db: db_dep
     address_model.state = address_request.state
     address_model.country = address_request.country
     address_model.postalcode = address_request.postalcode
+    address_model.apt_num = address_request.apt_num
 
     db.add(address_model)
     # flush retuns id
