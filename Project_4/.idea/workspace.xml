@@ -5,16 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="61b3647b-9761-492c-9084-996380e6a2d4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/TodoApp/static/todo/css/base.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TodoApp/static/todo/css/bootstrap.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TodoApp/static/todo/js/bootstrap.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TodoApp/static/todo/js/jquery-slim.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TodoApp/static/todo/js/popper.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TodoApp/templates/add-todo.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TodoApp/templates/edit-todo.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TodoApp/templates/home.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TodoApp/templates/login.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TodoApp/templates/register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TodoApp/templates/layout.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TodoApp/templates/add-todo.html" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/templates/add-todo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TodoApp/templates/edit-todo.html" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/templates/edit-todo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TodoApp/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/templates/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TodoApp/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TodoApp/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/templates/register.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,6 +94,19 @@
       <option name="presentableId" value="Default" />
       <updated>1688912913930</updated>
     </task>
+    <task id="LOCAL-00001" summary="Day14 : Full stack application created all base apis for rendering frontend">
+      <option name="closed" value="true" />
+      <created>1688917883502</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1688917883502</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Day14 : Full stack application created all base apis for rendering frontend" />
+    <option name="LAST_COMMIT_MESSAGE" value="Day14 : Full stack application created all base apis for rendering frontend" />
   </component>
 </project>
