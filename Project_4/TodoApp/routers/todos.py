@@ -2,7 +2,7 @@ import sys
 
 sys.path.append("..")
 
-from typing import Optional
+from typing import Optional, Annotated
 from fastapi import Depends, HTTPException, APIRouter, Request
 import models
 from database import engine, SessionLocal
@@ -27,9 +27,13 @@ def get_db():
         db.close()
 
 
+db_dependency = Annotated[Session, Depends(get_db)]
+
+
 @router.get("/", response_class=HTMLResponse)
-async def read_all_by_user(request: Request):
-    context = {"request": request}
+async def read_all_by_user(request: Request, db: db_dependency):
+    todos = db.query(models.Todos).filter(models.Todos.owner_id == 1).all()
+    context = {"request": request, "todos": todos}
     return templates.TemplateResponse("home.html", context)
 
 
