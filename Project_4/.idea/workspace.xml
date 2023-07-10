@@ -6,9 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="61b3647b-9761-492c-9084-996380e6a2d4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TodoApp/routers/todos.py" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/routers/todos.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TodoApp/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/templates/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TodoApp/todos.db" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/todos.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TodoApp/routers/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/routers/auth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TodoApp/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/templates/login.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +34,7 @@
     "DefaultHtmlFileTemplate": "HTML File",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "last_opened_file_path": "/Users/harshad/Desktop/workspace/Fastapi_Tutorial/Project_4/Starting_Files/Starting_Project/TodoApp/templates",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+    "settings.editor.selected.configurable": "project.propVCSSupport.Mappings"
   },
   "keyToStringList": {
     "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
@@ -147,7 +146,15 @@
       <option name="project" value="LOCAL" />
       <updated>1688998042990</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Day15 : completed mark as complete fucntionality">
+      <option name="closed" value="true" />
+      <created>1689000839829</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1689000839829</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -169,7 +176,8 @@
     <MESSAGE value="Day15 : completed the add-todo flow" />
     <MESSAGE value="Day15 : completed edit-todo flow" />
     <MESSAGE value="Day15 : completed delete todo flow" />
-    <option name="LAST_COMMIT_MESSAGE" value="Day15 : completed delete todo flow" />
+    <MESSAGE value="Day15 : completed mark as complete fucntionality" />
+    <option name="LAST_COMMIT_MESSAGE" value="Day15 : completed mark as complete fucntionality" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -178,6 +186,11 @@
           <url>file://$PROJECT_DIR$/TodoApp/routers/todos.py</url>
           <line>61</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/TodoApp/routers/auth.py</url>
+          <line>149</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

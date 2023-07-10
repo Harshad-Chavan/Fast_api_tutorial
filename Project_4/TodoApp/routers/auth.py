@@ -1,10 +1,12 @@
 import sys
 
+from starlette.responses import RedirectResponse, Response
+
 sys.path.append("..")
 
 from fastapi import Depends, HTTPException, status, APIRouter, Request
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Annotated
 import models
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
@@ -40,12 +42,27 @@ oauth2_bearer = OAuth2PasswordBearer(tokenUrl="token")
 router = APIRouter(prefix="/auth", tags=["auth"], responses={401: {"user": "Not authorized"}})
 
 
+class LoginForm:
+    def __init__(self, request: Request):
+        self.request: Request = request
+        self.username: Optional[str] = None
+        self.password: Optional[str] = None
+
+    async def create_oauth_form(self):
+        form = await self.request.form()
+        self.username = form.get("email")
+        self.password = form.get("password")
+
+
 def get_db():
     try:
         db = SessionLocal()
         yield db
     finally:
         db.close()
+
+
+db_dependency = Annotated[Session, Depends(get_db)]
 
 
 def get_password_hash(password):
@@ -107,19 +124,43 @@ async def create_new_user(create_user: CreateUser, db: Session = Depends(get_db)
 
 
 @router.post("/token")
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+async def login_for_access_token(
+    response: Response, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
+):
     user = authenticate_user(form_data.username, form_data.password, db)
     if not user:
-        raise token_exception()
-    token_expires = timedelta(minutes=20)
+        return False
+    token_expires = timedelta(minutes=60)
     token = create_access_token(user.username, user.id, expires_delta=token_expires)
-    return {"token": token}
+
+    response.set_cookie(key="access_token", value=token, httponly=True)
+    return True
 
 
 @router.get("/", response_class=HTMLResponse)
 async def authentication_page(request: Request):
     context = {"request": request}
     return templates.TemplateResponse("login.html", context)
+
+
+@router.post("/", response_class=HTMLResponse)
+async def login(request: Request, db: db_dependency):
+    try:
+        # This basically converts the email id into username which is required format for oauth
+        form = LoginForm(request)
+        await form.create_oauth_form()
+        response = RedirectResponse(url="/todos", status_code=status.HTTP_302_FOUND)
+        validate_user_cookie = await login_for_access_token(response=response, form_data=form, db=db)
+
+        if not validate_user_cookie:
+            msg = "Incorrect username/ Password"
+            context = {"request": request, "msg": msg}
+            return templates.TemplateResponse("login.html", context)
+        return response
+    except HTTPException:
+        msg = "Unknown error"
+        context = {"request": request, "msg": msg}
+        return templates.TemplateResponse("login.html", context)
 
 
 @router.get("/register", response_class=HTMLResponse)
