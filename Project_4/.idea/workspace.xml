@@ -7,10 +7,8 @@
     <list default="true" id="61b3647b-9761-492c-9084-996380e6a2d4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TodoApp/routers/todos.py" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/routers/todos.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TodoApp/templates/add-todo.html" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/templates/add-todo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TodoApp/templates/edit-todo.html" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/templates/edit-todo.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TodoApp/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/templates/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TodoApp/templates/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/templates/navbar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TodoApp/todos.db" beforeDir="false" afterPath="$PROJECT_DIR$/TodoApp/todos.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +123,23 @@
       <option name="project" value="LOCAL" />
       <updated>1688921211443</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Day15 : completed the add-todo flow">
+      <option name="closed" value="true" />
+      <created>1688995910875</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1688995910875</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Day15 : completed edit-todo flow">
+      <option name="closed" value="true" />
+      <created>1688997298754</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1688997298754</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -144,7 +158,9 @@
     <MESSAGE value="Day14 : created a base layout of navbar added to all html pages" />
     <MESSAGE value="Day14 : abstracted navbar from the layout" />
     <MESSAGE value="Day14 : update the read_all_todods api added loops in html" />
-    <option name="LAST_COMMIT_MESSAGE" value="Day14 : update the read_all_todods api added loops in html" />
+    <MESSAGE value="Day15 : completed the add-todo flow" />
+    <MESSAGE value="Day15 : completed edit-todo flow" />
+    <option name="LAST_COMMIT_MESSAGE" value="Day15 : completed edit-todo flow" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
