@@ -68,6 +68,29 @@ async def create_todo(
 
 
 @router.get("/edit-todo/{todo_id}", response_class=HTMLResponse)
-async def edit_todo(request: Request):
-    context = {"request": request}
+async def edit_todo(request: Request, todo_id: int, db: db_dependency):
+    todo = db.query(models.Todos).filter(models.Todos.id == todo_id).first()
+
+    context = {"request": request, "todo": todo}
     return templates.TemplateResponse("edit-todo.html", context)
+
+
+@router.post("/edit-todo/{todo_id}", response_class=HTMLResponse)
+async def edit_todo_commit(
+    request: Request,
+    todo_id: int,
+    db: db_dependency,
+    title: str = Form(...),
+    description: str = Form(...),
+    priority: int = Form(...),
+):
+    todo = db.query(models.Todos).filter(models.Todos.id == todo_id).first()
+    todo.title = title
+    todo.description = description
+    todo.priority = priority
+
+    db.add(todo)
+    db.commit()
+
+    context = {"request": request, "todo": todo}
+    return RedirectResponse(url='/todos', status_code=status.HTTP_302_FOUND)
