@@ -1,15 +1,17 @@
 import uvicorn
 from fastapi import FastAPI
+from starlette import status
+from starlette.staticfiles import RedirectResponse, StaticFiles
+
 import models
 from database import engine
 from routers import auth, todos
-from starlette.staticfiles import StaticFiles, RedirectResponse
-from starlette import status
 
 app = FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 # To redirect all to /todos
 @app.get("/")

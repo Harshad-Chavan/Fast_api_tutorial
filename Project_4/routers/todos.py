@@ -1,22 +1,26 @@
 import sys
 
-from starlette.responses import RedirectResponse
 from starlette import status
+from starlette.responses import RedirectResponse
 
 sys.path.append("..")
 
-from typing import Optional, Annotated
-from fastapi import Depends, HTTPException, APIRouter, Request, Form
-import models
-from database import engine, SessionLocal
-from sqlalchemy.orm import Session
-from pydantic import BaseModel, Field
-from .auth import get_current_user, get_user_exception
+from typing import Annotated, Optional
 
+from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel, Field
+from sqlalchemy.orm import Session
 
-router = APIRouter(prefix="/todos", tags=["todos"], responses={404: {"description": "Not found"}})
+import models
+from database import SessionLocal, engine
+
+from .auth import get_current_user
+
+router = APIRouter(
+    prefix="/todos", tags=["todos"], responses={404: {"description": "Not found"}}
+)
 
 models.Base.metadata.create_all(bind=engine)
 templates = Jinja2Templates(directory="templates")
