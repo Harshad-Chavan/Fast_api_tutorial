@@ -7,7 +7,7 @@
         <div class="card-body">
 
             {% if msg %}
-            {% if msg == 'Logout successful' or msg == "User successfully created" %}
+            {% if msg == 'Logout successful' or msg == "User successfully created" or msg == 'Password Changed successfully.Please login again' %}
             <div class="alert alert-success" role="alert">{{msg}}</div>
             {% else %}
             <div class="alert alert-danger" role="alert">{{msg}}</div>
