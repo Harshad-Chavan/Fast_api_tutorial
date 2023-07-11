@@ -4,7 +4,7 @@ from starlette.responses import RedirectResponse, Response
 
 sys.path.append("..")
 
-from fastapi import Depends, HTTPException, status, APIRouter, Request
+from fastapi import Depends, HTTPException, status, APIRouter, Request, Form
 from pydantic import BaseModel
 from typing import Optional, Annotated
 import models
@@ -179,6 +179,45 @@ async def logout(request: Request):
 async def registration_page(request: Request):
     context = {"request": request}
     return templates.TemplateResponse("register.html", context)
+
+
+@router.post("/register", response_class=HTMLResponse)
+async def registration_user(
+    request: Request,
+    db: db_dependency,
+    email: str = Form(...),
+    username: str = Form(...),
+    firstname: str = Form(...),
+    lastname: str = Form(...),
+    password: str = Form(...),
+    password2: str = Form(...),
+):
+
+    username_exists_check = db.query(models.Users).filter(models.Users.username == username).first()
+    email_exists_check = db.query(models.Users).filter(models.Users.email == email).first()
+
+    if password != password2 or username_exists_check or email_exists_check:
+        msg = "Invalid registration request"
+        return templates.TemplateResponse("register.html", context={"request": request, "msg": msg})
+
+    create_user_model = models.Users()
+    create_user_model.email = email
+    create_user_model.username = username
+    create_user_model.first_name = firstname
+    create_user_model.last_name = lastname
+
+    hash_password = get_password_hash(password)
+
+    create_user_model.hashed_password = hash_password
+
+    create_user_model.is_active = True
+
+    db.add(create_user_model)
+    db.commit()
+
+    msg = "User successfully Created"
+
+    return templates.TemplateResponse("register.html", context={"request": request, "msg": msg})
 
 
 # Exceptions
