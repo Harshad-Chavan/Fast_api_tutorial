@@ -35,14 +35,20 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 @router.get("/", response_class=HTMLResponse)
 async def read_all_by_user(request: Request, db: db_dependency):
-    todos = db.query(models.Todos).filter(models.Todos.owner_id == 1).all()
-    context = {"request": request, "todos": todos}
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_302_FOUND)
+    todos = db.query(models.Todos).filter(models.Todos.owner_id == user.get("id")).all()
+    context = {"request": request, "todos": todos, "user": user}
     return templates.TemplateResponse("home.html", context)
 
 
 @router.get("/add-todo", response_class=HTMLResponse)
 async def add_new_todo(request: Request):
-    context = {"request": request}
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_302_FOUND)
+    context = {"request": request, "user": user}
     return templates.TemplateResponse("add-todo.html", context)
 
 
@@ -54,12 +60,15 @@ async def create_todo(
     description: str = Form(...),
     priority: int = Form(...),
 ):
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_302_FOUND)
     todo_model = models.Todos()
     todo_model.title = title
     todo_model.description = description
     todo_model.priority = priority
     todo_model.complete = False
-    todo_model.owner_id = 1
+    todo_model.owner_id = user.get("id")
 
     db.add(instance=todo_model)
     db.commit()
@@ -69,9 +78,12 @@ async def create_todo(
 
 @router.get("/edit-todo/{todo_id}", response_class=HTMLResponse)
 async def edit_todo(request: Request, todo_id: int, db: db_dependency):
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_302_FOUND)
     todo = db.query(models.Todos).filter(models.Todos.id == todo_id).first()
 
-    context = {"request": request, "todo": todo}
+    context = {"request": request, "todo": todo, "user": user}
     return templates.TemplateResponse("edit-todo.html", context)
 
 
@@ -84,6 +96,9 @@ async def edit_todo_commit(
     description: str = Form(...),
     priority: int = Form(...),
 ):
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_302_FOUND)
     todo = db.query(models.Todos).filter(models.Todos.id == todo_id).first()
     todo.title = title
     todo.description = description
@@ -92,13 +107,21 @@ async def edit_todo_commit(
     db.add(todo)
     db.commit()
 
-    context = {"request": request, "todo": todo}
+    context = {"request": request, "todo": todo, "user": user}
     return RedirectResponse(url="/todos", status_code=status.HTTP_302_FOUND)
 
 
 @router.get("/delete/{todo_id}", response_class=HTMLResponse)
 async def delete_todo(request: Request, db: db_dependency, todo_id: int):
-    todo = db.query(models.Todos).filter(models.Todos.id == todo_id).filter(models.Todos.owner_id == 1).first()
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_302_FOUND)
+    todo = (
+        db.query(models.Todos)
+        .filter(models.Todos.id == todo_id)
+        .filter(models.Todos.owner_id == user.get("id"))
+        .first()
+    )
 
     if todo is None:
         return RedirectResponse(url="/todos", status_code=status.HTTP_302_FOUND)
@@ -111,6 +134,9 @@ async def delete_todo(request: Request, db: db_dependency, todo_id: int):
 
 @router.get("/complete/{todo_id}")
 async def complete_todo(request: Request, db: db_dependency, todo_id: int):
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_302_FOUND)
     todo = db.query(models.Todos).filter(models.Todos.id == todo_id).first()
 
     todo.complete = not todo.complete
